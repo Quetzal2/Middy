@@ -14,12 +14,8 @@ import feedparser
 import random
 import re
 import threading, time
-import sqlite3
 
 jarvisavatar = 'https://cdn.discordapp.com/avatars/284368851070877697/fb838b7fa492e35c9094d3f21d47bf91.png'
-
-con = sqlite3.connect('middy.db')
-cur = con.cursor()
 
 class Looking_For_Team(commands.Cog):
     def __init__(self, bot):
@@ -35,10 +31,7 @@ class Looking_For_Team(commands.Cog):
         embed.set_author(icon_url=member.avatar_url, name=str(member))
         embed.add_field(name='\uFEFF', value="I have set you to looking for a teammate")
 
-
-
         await ctx.send(content=None, embed=embed)
-
 
     @commands.command(pass_context=True, name='remove', aliases=['noqueue'])
     async def remove(self, ctx, member: discord.Member=None):
@@ -59,7 +52,6 @@ class Looking_For_Team(commands.Cog):
         embed.add_field(name='\uFEFF', value=data)
 
         await ctx.send(content=None, embed=embed)
-        # Thanks to Gio for the Command.
 
 
     @commands.command(pass_context=True, name='lfm', aliases=['teammate','find'])
@@ -73,7 +65,7 @@ class Looking_For_Team(commands.Cog):
         r = requests.post(url, data=payload)
         data = '%s' % (r.text)
 
-      # And to make it look nice, we wrap it in an Embed.
+        # And to make it look nice, we wrap it in an Embed.
         embed = discord.Embed(title='Looking for Player:', colour=member.colour)
         embed.set_author(icon_url=member.avatar_url, name=str(member))
 
@@ -81,7 +73,6 @@ class Looking_For_Team(commands.Cog):
         embed.add_field(name='\uFEFF', value=data)
 
         await ctx.send(content=None, embed=embed)
-        # Thanks to Gio for the Command.
 
 
 def setup(bot):
