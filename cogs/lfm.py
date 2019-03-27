@@ -1,11 +1,3 @@
-
-"""
-   Shogun Cog
-   -------------
-   We offload alot of work here via HTTP to a webserver due to the bot running on a seperate box
-   to the database, plus it was easier to work on something via PHP than Python at tha time
-"""
-
 import discord
 from discord.ext import commands
 
@@ -22,8 +14,14 @@ import feedparser
 import random
 import re
 import threading, time
+import sqlite3
 
-class Looking_For_Team():
+jarvisavatar = 'https://cdn.discordapp.com/avatars/284368851070877697/fb838b7fa492e35c9094d3f21d47bf91.png'
+
+con = sqlite3.connect('middy.db')
+cur = con.cursor()
+
+class Looking_For_Team(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -33,16 +31,14 @@ class Looking_For_Team():
 
         member = ctx.message.author
 
-        url = ""
-        payload = {'function': 'add', 'who': member  }
-        r = requests.post(url, data=payload)
-        data = '%s' % (r.text)
-
         embed = discord.Embed(title='Looking for Group:', colour=member.colour)
         embed.set_author(icon_url=member.avatar_url, name=str(member))
-        embed.add_field(name='\uFEFF', value=data)
+        embed.add_field(name='\uFEFF', value="I have set you to looking for a teammate")
 
-        await self.bot.say(content=None, embed=embed)
+
+
+        await ctx.send(content=None, embed=embed)
+
 
     @commands.command(pass_context=True, name='remove', aliases=['noqueue'])
     async def remove(self, ctx, member: discord.Member=None):
@@ -50,16 +46,21 @@ class Looking_For_Team():
 
         member = ctx.message.author
 
-        url = ""
+        url = "https://raithsphe.re/shogun/add.php"
         payload = {'function': 'remove', 'who': member  }
         r = requests.post(url, data=payload)
         data = '%s' % (r.text)
 
+        # And to make it look nice, we wrap it in an Embed.
         embed = discord.Embed(title='Looking for Group:', colour=member.colour)
         embed.set_author(icon_url=member.avatar_url, name=str(member))
+
+        # \uFEFF is a Zero-Width Space, which basically allows us to have an empty field name.
         embed.add_field(name='\uFEFF', value=data)
 
-        await self.bot.say(content=None, embed=embed)
+        await ctx.send(content=None, embed=embed)
+        # Thanks to Gio for the Command.
+
 
     @commands.command(pass_context=True, name='lfm', aliases=['teammate','find'])
     async def lfm(self, ctx, member: discord.Member=None):
@@ -67,16 +68,21 @@ class Looking_For_Team():
 
         member = ctx.message.author
 
-        url = ""
+        url = "https://raithsphe.re/shogun/add.php"
         payload = {'function': 'find', 'who': member  }
         r = requests.post(url, data=payload)
         data = '%s' % (r.text)
 
+      # And to make it look nice, we wrap it in an Embed.
         embed = discord.Embed(title='Looking for Player:', colour=member.colour)
         embed.set_author(icon_url=member.avatar_url, name=str(member))
+
+        # \uFEFF is a Zero-Width Space, which basically allows us to have an empty field name.
         embed.add_field(name='\uFEFF', value=data)
 
-        await self.bot.say(content=None, embed=embed)
+        await ctx.send(content=None, embed=embed)
+        # Thanks to Gio for the Command.
+
 
 def setup(bot):
     bot.add_cog(Looking_For_Team(bot))

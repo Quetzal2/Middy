@@ -1,6 +1,6 @@
 # Middy
 
-[![PyPI](https://img.shields.io/pypi/v/discord.py.svg)](https://pypi.python.org/pypi/discord.py/)
+[![PyPI](https://img.shields.io/badge/Discord.PY-v1.0.0a-orange.svg)](https://pypi.python.org/pypi/discord.py/)
 [![PyPI](https://img.shields.io/pypi/pyversions/discord.py.svg)](https://pypi.python.org/pypi/discord.py/)
 
 Middy is an Bot written for Discord for the Mega Shogun discord channel
