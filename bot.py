@@ -13,7 +13,7 @@ import json
 import subprocess
 
 config = configparser.ConfigParser()
-config.read('/home/raithsphere/Middy/config.ini')
+config.read('./config.ini')
 
 secret_key = config['DEFAULT']['DISCORD_TOKEN']
 prefix = config['DEFAULT']['COMMANDPREFIX']
