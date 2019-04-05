@@ -13,7 +13,7 @@ import json
 import subprocess
 
 config = configparser.ConfigParser()
-config.read('/home/raithsphere/Middy/config.ini')
+config.read('config.ini')
 
 secret_key = config['DEFAULT']['DISCORD_TOKEN']
 prefix = config['DEFAULT']['COMMANDPREFIX']
@@ -22,7 +22,11 @@ owner = config['DEFAULT']['ADMIN_ID']
 startup_extensions = ["member","misc","rlstats","lfm"]
 bot_description = """An all-purpose bot written By RaithSphere."""
 
-bot = commands.Bot(command_prefix=prefix, description=bot_description)
+def get_prefix(bot, message):
+    prefixes = [prefix, "?"]
+    return commands.when_mentioned_or(*prefixes)(bot, message)
+
+bot = commands.Bot(command_prefix=get_prefix, description=bot_description)
 
 @bot.event
 async def on_ready():
