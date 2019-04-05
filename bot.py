@@ -11,6 +11,7 @@ import traceback
 import aiohttp
 import json
 import subprocess
+import signal
 
 config = configparser.ConfigParser()
 config.read('config.ini')
