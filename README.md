@@ -18,4 +18,3 @@ Before installing and running your own instance of middy, you will first need to
 * Python 3.6
 * Pip
 * Dependencies: `python3.6 -m pip install -r requirements.txt`
-* The rewrite version of [discord.py](https://github.com/Rapptz/discord.py) with voice support: `python3.6 -m pip install -U git+https://github.com/Rapptz/discord.py@rewrite#egg=discord.py[voice]`
