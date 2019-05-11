@@ -18,3 +18,16 @@ Before installing and running your own instance of middy, you will first need to
 * Python 3.6
 * Pip
 * Dependencies: `python3.6 -m pip install -r requirements.txt`
+
+## Using Middy
+
+If you decide to use middy you start the script by doing **python3 launch.py** do not run bot.py directly it won't work
+Middy can run without the PHP Element as it links to the URL's used by my server, I do ask poliety if you can please remove the URLs or do not use the LFM Cog and disable it.
+
+## Contributions
+
+If you want to Contribute to middy please feel free to fork this repo
+
+## Thanks and Other Stuff
+
+Thanks to calculated.gg for the Source code to use their API
