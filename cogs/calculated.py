@@ -60,10 +60,10 @@ class Calculated_gg(commands.Cog):
         args = ctx.message.content.split(" ")
 		
         if len(args) < 2:
-            await bot.send_message(ctx.message.channel, f"Not enough arguments! The proper form of this command is: `{BOT_PREFIX}profile <id>`")
+            await ctx.send("Not enough arguments! The proper form of this command is: `{BOT_PREFIX}profile <id>`")
             return
         elif len(args) > 2:
-            await bot.send_message(ctx.message.channel, f"Too many arguments! The proper form of this command is: `{BOT_PREFIX}profile <id>`")
+            await ctx.send("Too many arguments! The proper form of this command is: `{BOT_PREFIX}profile <id>`")
             return
 
         print("Args Given:", args[1])
@@ -106,10 +106,10 @@ class Calculated_gg(commands.Cog):
         args = ctx.message.content.split(" ")
 		
         if len(args) < 2:
-            await bot.send_message(ctx.message.channel, f"Not enough arguments! The proper form of this command is: `{BOT_PREFIX}profile <id>`")
+            await ctx.send("Not enough arguments! The proper form of this command is: `{BOT_PREFIX}profile <id>`")
             return
         elif len(args) > 2:
-            await bot.send_message(ctx.message.channel, f"Too many arguments! The proper form of this command is: `{BOT_PREFIX}profile <id>`")
+            await ctx.send("Too many arguments! The proper form of this command is: `{BOT_PREFIX}profile <id>`")
             return
 	
         id = Calculated_gg.resolve_custom_url(args[1])		
@@ -145,6 +145,61 @@ class Calculated_gg(commands.Cog):
 
 	   # send message
         await ctx.send(content=None, embed=stats_embed)
+
+
+    @commands.command(pass_context=True, name='stat', aliases=['s'])
+    async def get_stat(self, ctx, *, player: str):
+        
+        args = ctx.message.content.split(" ")
+        # responds if not enough arguments
+        if len(args) < 3:
+            await ctx.send(f'Not enough arguments! The proper form of this command is: `{BOT_PREFIX}stat <stat> <id1> <id2> ...`')
+            return
+
+        stat = args[1].replace('_', ' ')
+        ids_maybe = [i.replace('_', ' ') for i in args[2:]]
+        # if only one id is given
+        if len(ids_maybe) == 1:
+            id = Calculated_gg.resolve_custom_url(ids_maybe[0])
+            url = "https://calculated.gg/api/player/{}/play_style/all".format(id)
+            if len(id) == 11 and id[0] == 'b' and id[-1] == 'b':
+                url += "?playlist=8"
+            stats = Calculated_gg.get_json(url)['dataPoints']
+            matches = [s for s in stats if s['name'] == stat]
+            # if stat does not match tell user so
+            if len(matches) == 0:
+                await ctx.send( "Could not find stat: {}".format(stat))
+                return
+
+            await ctx.send(str(matches[0]['average']))
+        # else if more ids are given
+        else:
+            # create embed
+            stats_embed = discord.Embed(
+                color=discord.Color.blue()
+            )
+            stats_embed.set_author(name=stat,
+                               icon_url="https://media.discordapp.net/attachments/495315775423381518/499488781536067595/bar_graph-512.png")
+            # sets footer of embed to the explanation of the stat
+            if args[1] in explanations:
+                stats_embed.set_footer(text=explanations[args[1]][0])
+
+            # fields with the usernames as names and their stats as values
+            for name in ids_maybe:
+                id = Calculated_gg.resolve_custom_url(name)
+                name = Calculated_gg.get_player_profile(id)[1]
+                url = "https://calculated.gg/api/player/{}/play_style/all".format(id)
+                if len(id) == 11 and id[0] == 'b' and id[-1] == 'b':
+                    url += "?playlist=8"
+                stats = Calculated_gg.get_json(url)['dataPoints']
+                matches = [s for s in stats if s['name'] == stat]
+                if len(matches) == 0:
+                    await ctx.send("Could not find stat: {}".format(stat))
+                    return
+                stats_embed.add_field(name=name, value=matches[0]['average'], inline=False)
+
+            # send embed
+            await ctx.send(content=None, embed=stats_embed)
 
 
 
