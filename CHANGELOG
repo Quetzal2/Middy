@@ -1,1 +1,10 @@
-This is to be completed
+Version 1.2
+==============
+Added calculated.gg 
+Setup launcher.py to start the bot now
+Removed owner.py as this is depricated now
+Added cogs display to bot.py (INCOMPLETE)
+
+Version 1.1
+==============
+Middy rewrite to Discord 1.0.0a
