@@ -6,7 +6,7 @@ st1="""\033[1;33;40m
 \033[1;37;40m      -- DISCORD BOT --  \033[1;35;40m  |_____|
 
 \033[1;37;40m Revision -\033[1;31;40m 3
-\033[1;37;40m Version  - \033[1;31;40m1.1
+\033[1;37;40m Version  - \033[1;31;40m1.2
 \033[1;37;40m https://github.com/raithsphere/Middy
 \033[1;37;40m At times I question you RaithSphere...
 """
