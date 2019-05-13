@@ -22,43 +22,43 @@ class Calculated_gg(commands.Cog):
         except json.decoder.JSONDecodeError as e:
             print("Error decoding JSON for url:", url)
             raise e
-    
+
     def get_user_id(user):
-            url = "https://calculated.gg/api/player/{}".format(user)
-            id = Calculated_gg.get_json(url)
-            return id
+        url = "https://calculated.gg/api/player/{}".format(user)
+        id = Calculated_gg.get_json(url)
+        return id
 
 
     def get_player_profile(id):
-            response_profile = Calculated_gg.get_json("https://calculated.gg/api/player/{}/profile".format(id))
+        response_profile = Calculated_gg.get_json("https://calculated.gg/api/player/{}/profile".format(id))
 
-            avatar_link = response_profile["avatarLink"]
-            avatar_name = response_profile["name"]
-            platform = response_profile["platform"]
-            past_names = response_profile["pastNames"]
+        avatar_link = response_profile["avatarLink"]
+        avatar_name = response_profile["name"]
+        platform = response_profile["platform"]
+        past_names = response_profile["pastNames"]
 
-            return avatar_link, avatar_name, platform, past_names
+        return avatar_link, avatar_name, platform, past_names
 
 
     def resolve_custom_url(url):
-	# fetches the ID for the given username
-            response_id = Calculated_gg.get_json("https://calculated.gg/api/player/{}".format(url))
-            if str(type(response_id)) == "<class 'dict'>":
-                response_id = "User not found"
-            return response_id
+        # fetches the ID for the given username
+        response_id = Calculated_gg.get_json("https://calculated.gg/api/player/{}".format(url))
+        if str(type(response_id)) == "<class 'dict'>":
+            response_id = "User not found"
+        return response_id
 
 
     def chunks(l, n):
-            """Yield successive n-sized chunks from l."""
-            for i in range(0, len(l), n):
-                yield l[i:i + n]
+        """Yield successive n-sized chunks from l."""
+        for i in range(0, len(l), n):
+            yield l[i:i + n]
 
     @commands.command(pass_context=True, name='profile', aliases=['p'])
     async def get_profile(self, ctx, *, player: str):
         """lookup your profile on calculated.gg"""
-        
+
         args = ctx.message.content.split(" ")
-		
+
         if len(args) < 2:
             await ctx.send("Not enough arguments! The proper form of this command is: `{BOT_PREFIX}profile <id>`")
             return
@@ -67,10 +67,10 @@ class Calculated_gg(commands.Cog):
             return
 
         print("Args Given:", args[1])
-	
-        id = Calculated_gg.resolve_custom_url(args[1])		
 
-		
+        id = Calculated_gg.resolve_custom_url(args[1])
+
+
         """Shows the profile for the given id."""
         response_stats = Calculated_gg.get_json("https://calculated.gg/api/player/{}/profile_stats".format(id))
         car_name = response_stats["car"]["carName"]
@@ -81,12 +81,12 @@ class Calculated_gg(commands.Cog):
         except KeyError:
             await ctx.send("User could not be found, please try again.")
             return
-	
+
         list_past_names = ""
         for name in past_names:
             list_past_names = list_past_names + name + "\n"
 
-                # creates stats_embed
+            # creates stats_embed
         stats_embed = discord.Embed(
                 color=discord.Color.blue()
                  )
@@ -97,24 +97,24 @@ class Calculated_gg(commands.Cog):
         stats_embed.add_field(name="Past names", value=list_past_names)
         stats_embed.set_footer(text="Stats collected from calculated.gg")
 
-	   # send message
+           # send message
         await ctx.send(content=None, embed=stats_embed)
 
     @commands.command(pass_context=True, name='ranks', aliases=['stats'])
     async def get_rank(self, ctx, *, player: str):
-        """lookup your ranks on calculated.gg"""        
+        """lookup your ranks on calculated.gg"""
         args = ctx.message.content.split(" ")
-		
+
         if len(args) < 2:
             await ctx.send("Not enough arguments! The proper form of this command is: `{BOT_PREFIX}profile <id>`")
             return
         elif len(args) > 2:
             await ctx.send("Too many arguments! The proper form of this command is: `{BOT_PREFIX}profile <id>`")
             return
-	
-        id = Calculated_gg.resolve_custom_url(args[1])		
 
-		
+        id = Calculated_gg.resolve_custom_url(args[1])
+
+
         """Shows the profile for the given id."""
 
         order = ['duel', 'doubles', 'solo', 'standard', 'hoops', 'rumble', 'dropshot', 'snowday']
@@ -125,12 +125,12 @@ class Calculated_gg(commands.Cog):
             await ctx.send("User could not be found, please try again.")
             return
 
-        ranks = Calculated_gg.get_json("https://calculated.gg/api/player/{}/ranks".format(id))	
+        ranks = Calculated_gg.get_json("https://calculated.gg/api/player/{}/ranks".format(id))
         list_past_names = ""
         for name in past_names:
             list_past_names = list_past_names + name + "\n"
 
-                # creates stats_embed
+            # creates stats_embed
         stats_embed = discord.Embed(
                 color=discord.Color.blue()
                  )
@@ -143,13 +143,13 @@ class Calculated_gg(commands.Cog):
 
         stats_embed.set_footer(text="Stats collected from calculated.gg")
 
-	   # send message
+           # send message
         await ctx.send(content=None, embed=stats_embed)
 
 
     @commands.command(pass_context=True, name='stat', aliases=['s'])
     async def get_stat(self, ctx, *, player: str):
-        
+
         args = ctx.message.content.split(" ")
         # responds if not enough arguments
         if len(args) < 3:

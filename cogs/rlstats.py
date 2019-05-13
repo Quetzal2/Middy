@@ -29,14 +29,14 @@ class RLStats(commands.Cog):
         payload = {'channel': 'none', 'user': first, 'plat': second  }
         r = requests.get(url, params=payload)
         # And to make it look nice, we wrap it in an Embed.
-        
+
 
         if second == "ps":
-           platform = "https://cdn.discordapp.com/attachments/443021734497615873/576119031158013957/d69yvt3-5b8e9bba-2238-4b33-8e3f-619e41b71073.png"
-           title = '%s\'s Rocket League Stats on PS4' % (first)
+            platform = "https://cdn.discordapp.com/attachments/443021734497615873/576119031158013957/d69yvt3-5b8e9bba-2238-4b33-8e3f-619e41b71073.png"
+            title = '%s\'s Rocket League Stats on PS4' % (first)
         if second == "xbox":
-           platform = "https://cdn.discordapp.com/attachments/443021734497615873/576119385266192384/xbox.png"
-           title = '%s\'s Rocket League Stats on Xbox' % (first)
+            platform = "https://cdn.discordapp.com/attachments/443021734497615873/576119385266192384/xbox.png"
+            title = '%s\'s Rocket League Stats on Xbox' % (first)
 
         embed = discord.Embed(title=title, colour=0xff8000)
         embed.set_thumbnail(url=platform)
@@ -48,12 +48,12 @@ class RLStats(commands.Cog):
         ranks = data.split('|')
         x = len(ranks)
         for x in ranks[1:]:
-           print(x)
-           moreranks = x.split(':')
-           print(moreranks)
-           list = moreranks[0].strip()
-           totalmmr = moreranks[1].strip()
-           embed.add_field(name=list, value=totalmmr)
+            print(x)
+            moreranks = x.split(':')
+            print(moreranks)
+            list = moreranks[0].strip()
+            totalmmr = moreranks[1].strip()
+            embed.add_field(name=list, value=totalmmr)
 
         embed.set_author(icon_url=jarvisavatar , name='RLStats')
 
