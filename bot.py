@@ -5,8 +5,8 @@ st1="""\033[1;33;40m
 \033[1;36;40m |__|_|__|__||_____||_____||___  |
 \033[1;37;40m      -- DISCORD BOT --  \033[1;35;40m  |_____|
 
-\033[1;37;40m Revision -\033[1;31;40m 3
-\033[1;37;40m Version  - \033[1;31;40m1.2
+\033[1;37;40m Revision -\033[1;31;40m 1
+\033[1;37;40m Version  - \033[1;31;40m1.2.1
 \033[1;37;40m https://github.com/raithsphere/Middy
 \033[1;37;40m At times I question you RaithSphere...
 """
@@ -57,6 +57,7 @@ class Middy(commands.AutoShardedBot):
     def __init__(self):
         bot = commands.Bot(command_prefix=get_prefix, description=bot_description)
         bot.boot_time = datetime.now()
+        self.loop = asyncio.get_event_loop()
         print(st1)
         spinner = Spinner('Loading Modules... ')
         for extension in startup_extensions:
@@ -66,7 +67,38 @@ class Middy(commands.AutoShardedBot):
             except Exception as e:
                 exc = f'{type(e).__name__}: {e}'
                 print(f'Failed to load extension {extension}\n{exc}')
+				
         print("\nConnecting to Discord....")
+
+
+		# Allows reactions to commands - await post_reaction(ctx.message, failure=True)
+		# Credit goes to AnonymousDapper for this code
+        async def post_reaction(message, emoji=None, **kwargs):
+            reaction_emoji = ""
+
+            if emoji is None:
+                if kwargs.get("success"):
+                    reaction_emoji = "\N{WHITE HEAVY CHECK MARK}"
+
+                elif kwargs.get("failure"):
+                    reaction_emoji = "\N{CROSS MARK}"
+
+                elif kwargs.get("warning"):
+                    reaction_emoji = "\N{WARNING SIGN}"
+
+                else:
+                    reaction_emoji = "\N{NO ENTRY}"
+
+            else:
+                reaction_emoji = emoji
+
+            try:
+                await message.add_reaction(reaction_emoji)
+
+            except Exception as e:
+                if not kwargs.get("quiet"):
+                    await message.channel.send(reaction_emoji)
+
 
         @bot.event
         async def on_ready():
@@ -95,80 +127,91 @@ class Middy(commands.AutoShardedBot):
             except ProcessLookupError:
                 pass
 
-        @bot.command()
+        # COGS LOADER VERSION 2
+        @bot.command(name="load", brief="load cog")
         @commands.is_owner()
-        async def list_cogs(self, ctx, name: str = None):
+        async def load_cog(ctx, name: str):
+            """Loads Cog"""
+            cog_name = "cogs." + name.lower()
+
+            if bot.extensions.get(cog_name) is not None:
+                await post_reaction(ctx.message, emoji="\N{SHRUG}")
+            else:
+                try:
+                    bot.load_extension(cog_name)
+
+                except Exception as e:
+                    await ctx.send(f"Failed to load {name}: [{type(e).__name__}]: `{e}`")
+                else:
+                    await post_reaction(ctx.message, success=True)
+
+        @bot.command(name="unload", brief="unload cog")
+        @commands.is_owner()
+        async def unload_cog(ctx, name: str):
+            """Unloads Cog"""
+            cog_name = "cogs." + name.lower()
+
+            if bot.extensions.get(cog_name) is None:
+                await post_reaction(ctx.message, emoji="\N{SHRUG}")
+            else:
+                try:
+                    bot.unload_extension(cog_name)
+
+                except Exception as e:
+                    await ctx.send(f"Failed to unload {name}: [{type(e).__name__}]: `{e}`")
+
+                else:
+                    await post_reaction(ctx.message, success=True)
+
+        @bot.command(name="list")
+        @commands.is_owner()
+        async def list_cogs(ctx, name: str = None):
+            """Lists Cog"""
             if name is None:
-                await ctx.send(f"Currently loaded cogs:\n{' '.join('`' + cog_name + '`' for cog_name in self.bot.extensions)}" if len(self.bot.extensions) > 0 else "No cogs loaded")
+                await ctx.send(f"Currently loaded cogs:\n{' '.join('`' + cog_name + '`' for cog_name in bot.extensions)}" if len(bot.extensions) > 0 else "No cogs loaded")
             else:
                 if self.bot.extensions.get("cogs." + name) is None:
-                    await self.bot.post_reaction(ctx.message, failure=True)
+                    await post_reaction(ctx.message, failure=True)
                 else:
-                    await self.bot.post_reaction(ctx.message, success=True)
-
-
-        @bot.command()
+                    await post_reaction(ctx.message, success=True)
+					
+        @bot.command(name="reload")
         @commands.is_owner()
-        async def load(ctx, extension_name :str):
-            """Load an extension"""
-            bot.load_extension(extension_name)
-            await ctx.send(f"{extension_name} was successfully loaded.")
+        async def reload_cog(self, ctx, name: str):
+            """Reloads Cog"""
+            cog_name = "cogs." + name.lower()
 
-
-        @load.error
-        async def load_error(ctx, error):
-            """Handle load's errors"""
-            if isinstance(error, commands.MissingRequiredArgument):
-                await ctx.send(f"Usage: {prefix}load(<extension name>).")
-            if isinstance(error, commands.errors.CommandInvokeError):
-                await ctx.send("Module not found.")
-            if isinstance(error, commands.errors.NotOwner):
-                await ctx.send("You're not my daddy, only daddy can use this function.")
-
-
-        @bot.command()
-        @commands.is_owner()
-        async def unload(self, ctx, *, extension_name :str):
-            if bot.get_cog(extension_name[extension_name.rfind(".")+1:]):
-                bot.unload_extension(extension_name)
-                await ctx.send(f"{extension_name} was successfully unloaded.")
+            if bot.extensions.get(cog_name) is None:
+                await post_reaction(ctx.message, emoji="\N{SHRUG}")
 
             else:
-                await ctx.send(f"Could not unload {extension_name}, module not found.")
+                try:
+                    bot.unload_extension(cog_name)
+                    bot.load_extension(cog_name)
+
+                except Exception as e:
+                    await ctx.send(f"Failed to reload {name}: [{type(e).__name__}]: `{e}`")
+
+                else:
+                    await post_reaction(ctx.message, success=True)
 
 
-        @unload.error
-        async def unload_error(ctx, error):
-            """Handle load's errors"""
-            if isinstance(error, commands.MissingRequiredArgument):
-                await ctx.send(f"Usage: {prefix}unload(<extension name>).")
-            if isinstance(error, commands.errors.NotOwner):
-                await ctx.send("You're not my daddy, only daddy can use this function.")
-
-
-        @bot.command()
-        @commands.is_owner()
-        async def reload(ctx, cog:str):
-            """Reload a given cog"""
-            bot.unload_extension(cog)
-            bot.load_extension(cog)
-            await ctx.send(f"{extension} reloaded successfully.")
-
-
+		## END OF COGS LOADER
+		
         @bot.command()
         @commands.is_owner()
         async def shutdown(ctx):
+            """Does what it says on the tin"""
             await ctx.send("Cya later o/")
             await bot.logout()
             bot.loop.close()
-
 
         @shutdown.error
         async def shutdow_error(ctx, error):
             """Handle shutdown's errors"""
             if isinstance(error, commands.errors.NotOwner):
                 await ctx.send("You're not my daddy, only daddy can use this function.")
-
+                await post_reaction(ctx.message, failure=True)
 
         @bot.command()
         @commands.is_owner()

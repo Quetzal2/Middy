@@ -1,3 +1,14 @@
+Todo for next release
+==============
+Upgrade to discord.py 1.2.0a
+
+Version 1.2.1
+==============
+Changed the cogs loading commands 
+Added a post reaction to show command status
+Removed permissions message for cogs loading
+Added a selfloop to core
+
 Version 1.2
 ==============
 Added calculated.gg 
