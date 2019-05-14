@@ -1,16 +1,3 @@
-st1="""\033[1;33;40m
-\033[1;31;40m  _______ __     __     __
-\033[1;33;40m |   |   |__|.--|  |.--|  |.--.--.
-\033[1;32;40m |       |  ||  _  ||  _  ||  |  |
-\033[1;36;40m |__|_|__|__||_____||_____||___  |
-\033[1;37;40m      -- DISCORD BOT --  \033[1;35;40m  |_____|
-
-\033[1;37;40m Revision -\033[1;31;40m 1
-\033[1;37;40m Version  - \033[1;31;40m1.2.1
-\033[1;37;40m https://github.com/raithsphere/Middy
-\033[1;37;40m At times I question you RaithSphere...
-"""
-
 import configparser
 import discord
 from discord.ext import commands
@@ -58,7 +45,6 @@ class Middy(commands.AutoShardedBot):
         bot = commands.Bot(command_prefix=get_prefix, description=bot_description)
         bot.boot_time = datetime.now()
         self.loop = asyncio.get_event_loop()
-        print(st1)
         spinner = Spinner('Loading Modules... ')
         for extension in startup_extensions:
             try:

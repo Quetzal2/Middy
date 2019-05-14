@@ -1,6 +1,8 @@
-Todo for next release
+Version 1.2.2
 ==============
-Upgrade to discord.py 1.2.0a
+Moved config.ini to config.ini.default so not to overwrite users config
+Middy now logs via Launcher script
+Script supports version 1.1.0 of discord.py library
 
 Version 1.2.1
 ==============
