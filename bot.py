@@ -177,7 +177,7 @@ class Middy(commands.AutoShardedBot):
 					
         @bot.command(name="reload")
         @commands.is_owner()
-        async def reload_cog(self, ctx, name: str):
+        async def reload_cog(ctx, name: str):
             """Reloads Cog"""
             cog_name = "cogs." + name.lower()
 
