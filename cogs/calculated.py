@@ -66,39 +66,38 @@ class Calculated_gg(commands.Cog):
             await ctx.send("Too many arguments! The proper form of this command is: `{BOT_PREFIX}profile <id>`")
             return
 
-        print("Args Given:", args[1])
+        async with ctx.channel.typing():
+            id = Calculated_gg.resolve_custom_url(args[1])
 
-        id = Calculated_gg.resolve_custom_url(args[1])
 
+            """Shows the profile for the given id."""
+            response_stats = Calculated_gg.get_json("https://calculated.gg/api/player/{}/profile_stats".format(id))
+            car_name = response_stats["car"]["carName"]
+            car_percentage = str(round(response_stats["car"]["carPercentage"] * 100, 1)) + "%"
 
-        """Shows the profile for the given id."""
-        response_stats = Calculated_gg.get_json("https://calculated.gg/api/player/{}/profile_stats".format(id))
-        car_name = response_stats["car"]["carName"]
-        car_percentage = str(round(response_stats["car"]["carPercentage"] * 100, 1)) + "%"
+            try:
+                avatar_link, avatar_name, platform, past_names = Calculated_gg.get_player_profile(id)
+            except KeyError:
+                await ctx.send("User could not be found, please try again.")
+                return
 
-        try:
-            avatar_link, avatar_name, platform, past_names = Calculated_gg.get_player_profile(id)
-        except KeyError:
-            await ctx.send("User could not be found, please try again.")
-            return
-
-        list_past_names = ""
-        for name in past_names:
-            list_past_names = list_past_names + name + "\n"
+            list_past_names = ""
+            for name in past_names:
+                list_past_names = list_past_names + name + "\n"
 
             # creates stats_embed
-        stats_embed = discord.Embed(
+            stats_embed = discord.Embed(
                 color=discord.Color.blue()
                  )
 
-        stats_embed.set_author(name=avatar_name, url="https://calculated.gg/players/{}/overview".format(id), icon_url="https://media.discordapp.net/attachments/495315775423381518/499488781536067595/bar_graph-512.png")
-        stats_embed.set_thumbnail(url=avatar_link)
-        stats_embed.add_field(name="Favourite car", value=car_name + " (" + car_percentage + ")")
-        stats_embed.add_field(name="Past names", value=list_past_names)
-        stats_embed.set_footer(text="Stats collected from calculated.gg")
+            stats_embed.set_author(name=avatar_name, url="https://calculated.gg/players/{}/overview".format(id), icon_url="https://media.discordapp.net/attachments/495315775423381518/499488781536067595/bar_graph-512.png")
+            stats_embed.set_thumbnail(url=avatar_link)
+            stats_embed.add_field(name="Favourite car", value=car_name + " (" + car_percentage + ")")
+            stats_embed.add_field(name="Past names", value=list_past_names)
+            stats_embed.set_footer(text="Stats collected from calculated.gg")
 
-           # send message
-        await ctx.send(content=None, embed=stats_embed)
+            # send message
+            await ctx.send(content=None, embed=stats_embed)
 
     @commands.command(pass_context=True, name='ranks', aliases=['stats'])
     async def get_rank(self, ctx, *, player: str):
@@ -112,39 +111,39 @@ class Calculated_gg(commands.Cog):
             await ctx.send("Too many arguments! The proper form of this command is: `{BOT_PREFIX}profile <id>`")
             return
 
-        id = Calculated_gg.resolve_custom_url(args[1])
+        async with ctx.channel.typing():
+            id = Calculated_gg.resolve_custom_url(args[1])
 
+            """Shows the profile for the given id."""
 
-        """Shows the profile for the given id."""
+            order = ['duel', 'doubles', 'solo', 'standard', 'hoops', 'rumble', 'dropshot', 'snowday']
 
-        order = ['duel', 'doubles', 'solo', 'standard', 'hoops', 'rumble', 'dropshot', 'snowday']
+            try:
+                avatar_link, avatar_name, platform, past_names = Calculated_gg.get_player_profile(id)
+            except KeyError:
+                await ctx.send("User could not be found, please try again.")
+                return
 
-        try:
-            avatar_link, avatar_name, platform, past_names = Calculated_gg.get_player_profile(id)
-        except KeyError:
-            await ctx.send("User could not be found, please try again.")
-            return
-
-        ranks = Calculated_gg.get_json("https://calculated.gg/api/player/{}/ranks".format(id))
-        list_past_names = ""
-        for name in past_names:
-            list_past_names = list_past_names + name + "\n"
+            ranks = Calculated_gg.get_json("https://calculated.gg/api/player/{}/ranks".format(id))
+            list_past_names = ""
+            for name in past_names:
+                list_past_names = list_past_names + name + "\n"
 
             # creates stats_embed
-        stats_embed = discord.Embed(
+            stats_embed = discord.Embed(
                 color=discord.Color.blue()
                  )
 
-        stats_embed.set_author(name=avatar_name, url="https://calculated.gg/players/{}/overview".format(id), icon_url="https://media.discordapp.net/attachments/495315775423381518/499488781536067595/bar_graph-512.png")
-        stats_embed.set_thumbnail(url=avatar_link)
+            stats_embed.set_author(name=avatar_name, url="https://calculated.gg/players/{}/overview".format(id), icon_url="https://media.discordapp.net/attachments/495315775423381518/499488781536067595/bar_graph-512.png")
+            stats_embed.set_thumbnail(url=avatar_link)
 
-        for playlist in order:
-            stats_embed.add_field(name=playlist.title(), value=ranks[playlist]['name'] + " - " + str(ranks[playlist]['rating']))
+            for playlist in order:
+                stats_embed.add_field(name=playlist.title(), value=ranks[playlist]['name'] + " - " + str(ranks[playlist]['rating']))
 
-        stats_embed.set_footer(text="Stats collected from calculated.gg")
+            stats_embed.set_footer(text="Stats collected from calculated.gg")
 
-           # send message
-        await ctx.send(content=None, embed=stats_embed)
+            # send message
+            await ctx.send(content=None, embed=stats_embed)
 
 
     @commands.command(pass_context=True, name='stat', aliases=['s'])
