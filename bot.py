@@ -26,7 +26,7 @@ owner = config['DEFAULT']['ADMIN_ID']
 
 log = logging.getLogger(__name__)
 
-startup_extensions = ["member","misc","rlstats","lfm","raith","calculated"]
+startup_extensions = ["member","misc","rlstats","lfm","raith","calculated","polls"]
 bot_description = """An all-purpose bot written By RaithSphere."""
 
 def get_prefix(bot, message):
