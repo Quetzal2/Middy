@@ -1,0 +1,23 @@
+Version 1.2.2
+==============
+Moved config.ini to config.ini.default so not to overwrite users config
+Middy now logs via Launcher script
+Script supports version 1.1.0 of discord.py library
+
+Version 1.2.1
+==============
+Changed the cogs loading commands 
+Added a post reaction to show command status
+Removed permissions message for cogs loading
+Added a selfloop to core
+
+Version 1.2
+==============
+Added calculated.gg 
+Setup launcher.py to start the bot now
+Removed owner.py as this is depricated now
+Added cogs display to bot.py (INCOMPLETE)
+
+Version 1.1
+==============
+Middy rewrite to Discord 1.0.0a
