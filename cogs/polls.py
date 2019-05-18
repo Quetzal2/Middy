@@ -129,8 +129,15 @@ class Poll:
         self.state = EPollState.init
         self.options = []
     
-    def toString(self):
-        string = self.title + "\n"
+    def toString(self, formated=False):
+        b = ""
+        i = ""
+        u = ""
+        if formated:
+            b = "**"
+            i = "*"
+            u = "__"
+        string = b+self.title+b + "\n"
         for o in self.options:
             string += o.toString() + "\n"
         return string
@@ -142,19 +149,33 @@ class PollOption:
     inputs=[]
     patterns=[]
     
-    def toString(self):
-        string = self.choice + " : "
+    def toString(self, formated=False):
+        b = ""
+        i = ""
+        u = ""
+        if formated:
+            b = "**"
+            i = "*"
+            u = "__"
+        string = b+self.choice + " :"+b+" "
         for i in range(len(self.patterns)-1):
             string += self.patterns[i]
-            string += self.inputs[i].toString()
+            string += i+self.inputs[i].toString()+i
         string += self.patterns[-1]
         return string
 
-    def valueToString(self):
+    def valueToString(self, formated=False):
+        b = ""
+        i = ""
+        u = ""
+        if formated:
+            b = "**"
+            i = "*"
+            u = "__"
         string = ""
         for i in range(len(self.patterns)-1):
             string += self.patterns[i]
-            string += self.inputs[i].toString()
+            string += i+self.inputs[i].toString()+i
         string += self.patterns[-1]
         return string
 
