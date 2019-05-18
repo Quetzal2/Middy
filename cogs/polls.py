@@ -150,32 +150,32 @@ class PollOption:
     patterns=[]
     
     def toString(self, formated=False):
-        b = ""
-        i = ""
-        u = ""
+        b_ = ""
+        i_ = ""
+        u_ = ""
         if formated:
-            b = "**"
-            i = "*"
-            u = "__"
-        string = b+self.choice + " :"+b+" "
+            b_ = "**"
+            i_ = "*"
+            u_ = "__"
+        string = b_+self.choice + " :"+b_+" "
         for i in range(len(self.patterns)-1):
             string += self.patterns[i]
-            string += i+self.inputs[i].toString()+i
+            string += i_+self.inputs[i].toString()+i_
         string += self.patterns[-1]
         return string
 
     def valueToString(self, formated=False):
-        b = ""
-        i = ""
-        u = ""
+        b_ = ""
+        i_ = ""
+        u_ = ""
         if formated:
-            b = "**"
-            i = "*"
-            u = "__"
+            b_ = "**"
+            i_ = "*"
+            u_ = "__"
         string = ""
         for i in range(len(self.patterns)-1):
             string += self.patterns[i]
-            string += i+self.inputs[i].toString()+i
+            string += i_+self.inputs[i].toString()+i_
         string += self.patterns[-1]
         return string
 
