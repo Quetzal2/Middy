@@ -188,8 +188,15 @@ class OptionInput:
     i_default = None
 
     def toString(self, formated=False):
+        b_ = ""
+        i_ = ""
+        u_ = ""
+        if formated:
+            b_ = "**"
+            i_ = "*"
+            u_ = "__"
         env = self.i_environment+":" if self.i_environment != None else ""
-        name = self.i_name if self.i_name != None else ""
+        name = u_+self.i_name+u_ if self.i_name != None else ""
         itype = "("+self.i_type+")" if self.i_type != None else ""
         default = "="+self.i_default if self.i_default != None else ""
         return "[" + env + name + itype + default + "]"
