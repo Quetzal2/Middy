@@ -12,7 +12,7 @@ class Polls(commands.Cog):
     
     def __init__(self, bot):
         self.bot = bot
-        polls = []
+        self.polls = []
     
     
     class PollParser(commands.Converter):
@@ -106,7 +106,21 @@ class Polls(commands.Cog):
 
         msg = await ctx.send(embed=answer)
         await msg.add_reaction(emoji="⚡")
+        poll.poll_msg = msg
+        self.polls += poll
+        self.active_poll = poll
+        
     
+    
+    async def on_reaction_add(reaction, user):
+        for poll in self.polls:
+            if poll.poll_msg == reaction.message:
+                for option in options:
+                    if reaction.emoji == option.emoji:
+                        option.voters += [user]
+                        print(option.toString)
+                        break
+                break
 
 
 
@@ -122,6 +136,8 @@ class Poll:
     options = None
     
     state = None
+    
+    poll_msg = None
     parameters = {
          "grow": False
         ,"match_strict":70
@@ -147,6 +163,7 @@ class Poll:
 
 
 class PollOption:
+    emoji=None
     choice=None
     inputs=[]
     patterns=[]
