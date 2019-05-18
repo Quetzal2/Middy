@@ -100,7 +100,7 @@ class Polls(commands.Cog):
                 inline=False,
             )
         answer.set_thumbnail(
-            url=ctx.message.author.avatar_url
+            url="https://raw.githubusercontent.com/Quetzal2/Middy/polls/cogs/poll/poll_poll.png"
         )
 
         await ctx.send(embed=answer)
