@@ -96,7 +96,7 @@ class Polls(commands.Cog):
         for option in poll.options:
             answer.add_field(
                 name=option.choice,
-                value=option.toString(),
+                value=option.valueToString(),
                 inline=False,
             )
         answer.set_thumbnail(
@@ -144,6 +144,14 @@ class PollOption:
     
     def toString(self):
         string = self.choice + " : "
+        for i in range(len(self.patterns)-1):
+            string += self.patterns[i]
+            string += self.inputs[i].toString()
+        string += self.patterns[-1]
+        return string
+
+    def valueToString(self):
+        string = ""
         for i in range(len(self.patterns)-1):
             string += self.patterns[i]
             string += self.inputs[i].toString()
