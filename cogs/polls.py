@@ -175,7 +175,7 @@ class PollOption:
         string = ""
         for i in range(len(self.patterns)-1):
             string += self.patterns[i]
-            string += i_+self.inputs[i].toString(formated)+i_
+            string += self.inputs[i].toString(formated)
         string += self.patterns[-1]
         return string
 
@@ -199,7 +199,7 @@ class OptionInput:
         name = u_+self.i_name+u_ if self.i_name != None else ""
         itype = "("+self.i_type+")" if self.i_type != None else ""
         default = "="+self.i_default if self.i_default != None else ""
-        return "[" + env + name + itype + default + "]"
+        return i_+"[" + env+i_ + name + i_+itype + default + "]"+i_
 
 
 
