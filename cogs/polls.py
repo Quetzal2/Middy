@@ -96,7 +96,7 @@ class Polls(commands.Cog):
         for option in poll.options:
             answer.add_field(
                 name=option.choice,
-                value=option.valueToString(),
+                value=option.valueToString(True),
                 inline=False,
             )
         answer.set_thumbnail(
@@ -139,7 +139,7 @@ class Poll:
             u = "__"
         string = b+self.title+b + "\n"
         for o in self.options:
-            string += o.toString() + "\n"
+            string += o.toString(formated) + "\n"
         return string
     
 
@@ -160,7 +160,7 @@ class PollOption:
         string = b_+self.choice + " :"+b_+" "
         for i in range(len(self.patterns)-1):
             string += self.patterns[i]
-            string += i_+self.inputs[i].toString()+i_
+            string += i_+self.inputs[i].toString(formated)+i_
         string += self.patterns[-1]
         return string
 
@@ -175,7 +175,7 @@ class PollOption:
         string = ""
         for i in range(len(self.patterns)-1):
             string += self.patterns[i]
-            string += i_+self.inputs[i].toString()+i_
+            string += i_+self.inputs[i].toString(formated)+i_
         string += self.patterns[-1]
         return string
 
@@ -187,7 +187,7 @@ class OptionInput:
     i_type = None
     i_default = None
 
-    def toString(self):
+    def toString(self, formated=False):
         env = self.i_environment+":" if self.i_environment != None else ""
         name = self.i_name if self.i_name != None else ""
         itype = "("+self.i_type+")" if self.i_type != None else ""
