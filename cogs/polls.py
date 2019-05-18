@@ -118,7 +118,7 @@ class Polls(commands.Cog):
                 for option in options:
                     if reaction.emoji == option.emoji:
                         option.voters += [user]
-                        print(option.toString)
+                        print(option.toString)#DEBUG
                         break
                 break
 
