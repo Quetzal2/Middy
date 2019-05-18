@@ -201,7 +201,7 @@ class OptionInput:
         name = u_+self.i_name+u_ if self.i_name != None else ""
         itype = "("+self.i_type+")" if self.i_type != None else ""
         default = "="+self.i_default if self.i_default != None else ""
-        return i_+"[" + env+i_ + name + i_+itype + default + "]"+i_
+        return name+"=?"
 
 
 
