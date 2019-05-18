@@ -102,8 +102,10 @@ class Polls(commands.Cog):
         answer.set_thumbnail(
             url="https://raw.githubusercontent.com/Quetzal2/Middy/polls/cogs/poll/poll_poll.png"
         )
+        answer.set_footer(text="Type `;start` or click on `⚡` to start the poll", icon_url=ctx.message.author.avatar_url)
 
-        await ctx.send(embed=answer)
+        msg = await ctx.send(embed=answer)
+        await msg.add_reaction(emoji="⚡")
     
 
 
