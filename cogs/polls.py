@@ -17,8 +17,9 @@ class Polls(commands.Cog):
     
     class PollParser(commands.Converter):
         async def convert(self, ctx, message):
-            pattern_option_choice = re.compile(r"^\s*(\w+|:\w+:)\s*(:.*|\s*\n?$)")
-            pattern_option_value = re.compile(r"^\s*(\w+|:\w+:)\s*:\s*(.*[^\s])\s*\n?")
+            p_choice = r"^\s*((\w+)\s*(:\w+:)?|(:\w+:)\s*(\w+)?)\s*"
+            pattern_option_choice = re.compile(p_choice+"(:.*|\s*\n?$)")
+            pattern_option_value = re.compile(p_choice+r":\s*(.*[^\s])\s*\n?")
             
             pattern_parameter = re.compile(r"^\s*;")
             
@@ -39,13 +40,18 @@ class Polls(commands.Cog):
                     pass###TODO### Manage parameters
                 elif option != None:
                     poll_option = PollOption()
-                    poll_option.choice = option.group(1)
+                    if option.group(2) != None:
+                        poll_option.choice = option.group(2)
+                        poll_option.emoji = option.group(3)
+                    else:
+                        poll_option.choice = option.group(4)
+                        poll_option.emoji = option.group(5)
                     
                     ## Get the value
                     
                     value = re.match(pattern_option_value, line)
                     if value != None: #there's a value
-                        value = value.group(2)
+                        value = value.group(6)
                         pattern_input = self.inputPattern()
                         inputs = []
                         spans = []
@@ -215,10 +221,10 @@ class OptionInput:
             i_ = "*"
             u_ = "__"
         env = self.i_environment+":" if self.i_environment != None else ""
-        name = u_+self.i_name+u_ if self.i_name != None else ""
+        name = i_+u_+self.i_name+u_+i_ if self.i_name != None else ""
         itype = "("+self.i_type+")" if self.i_type != None else ""
         default = "="+self.i_default if self.i_default != None else ""
-        return name+"=?"
+        return name
 
 
 
