@@ -113,7 +113,7 @@ class Polls(commands.Cog):
         msg = await ctx.send(embed=answer)
         await msg.add_reaction(emoji="⚡")
         poll.poll_msg = msg
-        self.polls += poll
+        self.polls += [poll]
         self.active_poll = poll
         
     
